@@ -1,0 +1,108 @@
+{
+    "Utilitarios": [
+        {
+            "Id": 1,
+            "Modelo": "Fiat Fiorino",
+            "Eixos": 2,
+            "Capacidade": 650,
+            "Disponibilidade": "Nao"
+        },
+        {
+            "Id": 2,
+            "Modelo": "Volkswagen Delivery Express",
+            "Eixos": 2,
+            "Capacidade": 1500,
+            "Disponibilidade": "Nao"
+        },
+        {
+            "Id": 3,
+            "Modelo": "Hyundai HR",
+            "Eixos": 2,
+            "Capacidade": 1800,
+            "Disponibilidade": "Sim"
+        },
+        {
+            "Id": 4,
+            "Modelo": "Iveco Daily 35S14",
+            "Eixos": 2,
+            "Capacidade": 1700,
+            "Disponibilidade": "Sim"
+        },
+        {
+            "Id": 5,
+            "Modelo": "Mercedes-Benz Sprinter 314 CDI",
+            "Eixos": 2,
+            "Capacidade": 1400,
+            "Disponibilidade": "Sim"
+        }
+    ],
+    "Caminhao Leve": [
+        {
+            "Id": 6,
+            "Modelo": "Mercedes-Benz Atego 2430",
+            "Eixos": 4,
+            "Capacidade": 18000,
+            "Disponibilidade": "Sim"
+        },
+        {
+            "Id": 7,
+            "Modelo": "Scania P310",
+            "Eixos": 4,
+            "Capacidade": 20000,
+            "Disponibilidade": "Sim"
+        },
+        {
+            "Id": 8,
+            "Modelo": "Volkswagen Constellation 25.420",
+            "Eixos": 4,
+            "Capacidade": 24000,
+            "Disponibilidade": "Sim"
+        }
+    ],
+    "Caminhao Pesado": [
+        {
+            "Id": 9,
+            "Modelo": "Ford Cargo 2842",
+            "Eixos": 6,
+            "Capacidade": 31000,
+            "Disponibilidade": "Sim"
+        },
+        {
+            "Id": 10,
+            "Modelo": "Iveco Stralis 440",
+            "Eixos": 4,
+            "Capacidade": 28000,
+            "Disponibilidade": "Sim"
+        },
+        {
+            "Id": 11,
+            "Modelo": "DAF XF 105",
+            "Eixos": 4,
+            "Capacidade": 26000,
+            "Disponibilidade": "Sim"
+        }
+    ],
+    "Caminhao Extra Pesado": [
+        {
+            "Id": 12,
+            "Modelo": "Scania R450",
+            "Eixos": 6,
+            "Capacidade": 30000,
+            "Disponibilidade": "Sim"
+        },
+        {
+            "Id": 13,
+            "Modelo": "Mercedes-Benz Actros 2651",
+            "Eixos": 6,
+            "Capacidade": 33000,
+            "Disponibilidade": "Sim"
+        },
+        {
+            "Id": 14,
+            "Modelo": "MAN TGX 28.440",
+            "Eixos": 6,
+            "Capacidade": 32000,
+            "Disponibilidade": "Sim"
+        }
+    ]
+}
