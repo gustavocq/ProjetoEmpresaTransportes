@@ -1,127 +1,110 @@
 import json
 import os
-from utils import Utils  # Certifique-se de que o arquivo utils.py esteja no mesmo diretório
+import unicodedata
 
-class main:
-    # Define o caminho para a pasta BancoDeDados e os arquivos de veículos e cidades
-    CAMINHO_JSON_VEICULOS = os.path.join(os.path.dirname(__file__), 'BancoDeDados', 'veiculosTransporte.json')
-    CAMINHO_JSON_CIDADES = os.path.join(os.path.dirname(__file__), 'BancoDeDados', 'cidades.json')
-    CAMINHO_JSON_SIGLAS = os.path.join(os.path.dirname(__file__), 'BancoDeDados', 'estadosSiglas.json')
-
-    def __init__(self):
-        # Instanciando a classe Utils
-        self.utils = Utils()
-        self.veiculosTransporte = self.utils.carregarDadosVeiculos(self.CAMINHO_JSON_VEICULOS)
-        self.cidades = self.utils.carregarCidades(self.CAMINHO_JSON_CIDADES)
-        self.siglas = self.utils.carregarSiglas(self.CAMINHO_JSON_SIGLAS)
-
-        # Verificação após carregar os dados
-        if not self.veiculosTransporte:
-            print("Erro ao carregar dados dos veículos.")
-            exit()
-        if not self.cidades:
-            print("Erro ao carregar dados das cidades.")
-            exit()
-        if not self.siglas:
-            print("Erro ao carregar dados das siglas.")
-            exit()
-
-    # Limpa a tela do terminal
+class Utils:
     @staticmethod
-    def limparTela():
-        os.system("cls" if os.name == "nt" else "clear")
+    def carregarDadosVeiculos(caminho):
+        try:
+            with open(caminho, 'r', encoding='utf-8') as arquivo:
+                veiculosTransporte = json.load(arquivo)
+                print("Dados dos veículos carregados com sucesso!")
+                return veiculosTransporte
+        except FileNotFoundError:
+            print("Erro: O arquivo JSON de veículos não foi encontrado.")
+        except json.JSONDecodeError:
+            print("Erro: O JSON dos veículos está mal formatado.")
+        except Exception as e:
+            print(f"Erro inesperado ao carregar veículos: {e}")
+        return None
 
-    # Pausa para continuar
     @staticmethod
-    def pausaParaContinuar():
-        print("\nPressione Enter para continuar...")
-        input()
+    def carregarCidades(caminho):
+        try:
+            with open(caminho, 'r', encoding='utf-8') as arquivo:
+                cidades = json.load(arquivo)
+                print("Cidades carregadas com sucesso!")
+                return cidades
+        except FileNotFoundError:
+            print("Erro: O arquivo de cidades não foi encontrado.")
+        except json.JSONDecodeError:
+            print("Erro: O JSON das cidades está mal formatado.")
+        except Exception as e:
+            print(f"Erro inesperado ao carregar cidades: {e}")
+        return None
 
-    # Menu de categorias de veículos
-    def menuCategorias(self, peso, cidade_escolhida, estado):
-        print("\nEscolha a categoria do veículo de transporte:")
-        print("1. Utilitários")
-        print("2. Caminhão Leve")
-        print("3. Caminhão Pesado")
-        print("4. Caminhão Extra Pesado")
-        print("0. Voltar ao menu anterior")
+    # Carrega as siglas dos estados
+    @staticmethod
+    def carregarSiglas(caminho):
+        try:
+            with open(caminho, 'r', encoding='utf-8') as arquivo:
+                siglas = json.load(arquivo)
+                print("Siglas dos estados carregadas com sucesso!")
+                return siglas
+        except FileNotFoundError:
+            print("Erro: O arquivo de siglas não foi encontrado.")
+        except json.JSONDecodeError:
+            print("Erro: O JSON das siglas está mal formatado.")
+        except Exception as e:
+            print(f"Erro inesperado ao carregar siglas: {e}")
+        return None
 
-        escolha = input("Digite o número da opção desejada: ")
-        categorias = {
-            "1": "Utilitarios",
-            "2": "Caminhao Leve",
-            "3": "Caminhao Pesado",
-            "4": "Caminhao Extra Pesado"
-        }
+    @staticmethod
+    def validarEstado(estado, siglas):
+        estado = estado.strip().lower()  
+        siglas_lower = {k.lower(): v for k, v in siglas.items()}  
+        if estado in siglas_lower:
+            return siglas_lower[estado]  
+        elif estado in (v.lower() for v in siglas_lower.values()):  
+            return Utils.removerAcento(estado)
+        return None 
 
-        if escolha in categorias:
-            categoria = categorias[escolha]
-            veiculos_disponiveis = self.utils.filtrarVeiculosPorCategoria(self.veiculosTransporte, categoria, peso)
-            if veiculos_disponiveis:
-                print("\nVeículos disponíveis:")
-                for i, veiculo in enumerate(veiculos_disponiveis):
-                    print(f"{i + 1}. {veiculo['Modelo']} - Capacidade: {veiculo['Capacidade']}")
 
-                # Solicita ao usuário escolher um veículo para reservar
-                try:
-                    veiculo_escolhido = int(input("Escolha um veículo para reservar (número): ")) - 1
-                    if 0 <= veiculo_escolhido < len(veiculos_disponiveis):
-                        self.utils.reservarVeiculo(veiculos_disponiveis[veiculo_escolhido], self.CAMINHO_JSON_VEICULOS, self.veiculosTransporte)
-                        print("A melhor rota para o destino da sua mercadoria está disponível no link abaixo, boa viagem!")
-                        print(f"{Utils.montaMelhorRota("Belo Horizonte", "MG", cidade_escolhida, estado)}")
-                    else:
-                        print("Opção inválida! Tente novamente.")
-                except ValueError:
-                    print("Entrada inválida! Tente novamente.")
-            else:
-                print("Nenhum veículo disponível para as especificações fornecidas.")
-        elif escolha == "0":
-            return
+    @staticmethod
+    def filtrarVeiculosPorCategoria(veiculosTransporte, categoria, peso):
+        veiculos_disponiveis = []
+        if categoria in veiculosTransporte:
+            for veiculo in veiculosTransporte[categoria]:
+                capacidade = veiculo['Capacidade']  
+                if capacidade >= peso and veiculo.get('Disponibilidade') == "Sim":  
+                    veiculos_disponiveis.append(veiculo)
+        return veiculos_disponiveis
+
+    @staticmethod
+    def reservarVeiculo(veiculo, caminho, veiculosTransporte, cidade, estado):
+        veiculo['Destino'] = f"{cidade} - {estado}"  
+        veiculo['Disponibilidade'] = "Nao"  
+        Utils.salvarDadosVeiculos(caminho, veiculosTransporte)  
+        print(f"Veículo {veiculo['Modelo']} reservado com sucesso! Destino: {veiculo['Destino']}")        
+
+    @staticmethod
+    def salvarDadosVeiculos(caminho, veiculosTransporte):
+        try:
+            with open(caminho, 'w', encoding='utf-8') as arquivo:
+                json.dump(veiculosTransporte, arquivo, ensure_ascii=False, indent=4)
+                print("Dados dos veículos salvos com sucesso!")
+        except Exception as e:
+            print(f"Erro ao salvar dados dos veículos: {e}")
+
+    @staticmethod
+    def listarCidadesPorEstado(estado, cidades): 
+
+        if estado in cidades:
+            return cidades[estado]
         else:
-            print("Opção inválida! Tente novamente.")
+            return None  
         
-        self.pausaParaContinuar()
+    @staticmethod
+    def removerAcento(texto):
+        texto_normalizado = unicodedata.normalize('NFD', texto)
+        return ''.join(c for c in texto_normalizado if unicodedata.category(c) != 'Mn')  
+    
+    @staticmethod
+    def montaMelhorRota(cidadeSaida, estadoSaida, cidadeDestino, estadoDestino):
+        cidadeSaida = cidadeSaida.replace(" ","+")
+        estadoSaida = estadoSaida.replace(" ","+")
+        cidadeDestino = cidadeDestino.replace(" ","+")
+        estadoDestino = estadoDestino.replace(" ","+")
 
-    # Menu principal
-    def menuPrincipal(self):
-        while True:
-            self.limparTela()
-            print("\nEscolha um estado (ou sigla): ")
-            estado = input("Informe o estado: ")
-            
-            estado_valido = self.utils.validarEstado(estado, self.siglas)
-            while estado_valido is None:
-                print("Estado inválido! Tente novamente.")
-                print("\nEscolha um estado (ou sigla): ")
-                estado = input("Informe o estado: ")
-                estado_valido = self.utils.validarEstado(estado, self.siglas)
-            
-            cidades_do_estado = self.utils.listarCidadesPorEstado(estado_valido, self.cidades)
-            while cidades_do_estado is None:
-                print("Nenhuma cidade encontrada para o estado fornecido.")
-                estado = input("Informe o estado: ")
-                cidades_do_estado = self.utils.listarCidadesPorEstado(estado_valido, self.cidades)                
-
-            cidade_escolhida = input("Informe a cidade: ")
-            cidade_escolhida = self.utils.removerAcento(cidade_escolhida)
-
-            while cidade_escolhida.upper() not in cidades_do_estado:                
-                cidade_escolhida = input("Informe a cidade: ")
-
-            # Solicita e valida o peso
-            while True:
-                try:
-                    peso = int(input("Informe o peso da mercadoria (em kg): "))
-                    if peso <= 0:
-                        raise ValueError("O peso deve ser um valor positivo.")
-                    break
-                except ValueError as e:
-                    print(f"Entrada inválida: {e}. Tente novamente.")
-
-            # Menu de categorias
-            self.menuCategorias(peso, cidade_escolhida, estado_valido)
-
-# Carregamento inicial e execução do menu principal
-if __name__ == "__main__":
-    main = main()
-    main.menuPrincipal()
+        return f"https://www.google.com/maps/dir/?api=1&origin={cidadeSaida},{estadoSaida}&destination={cidadeDestino},{estadoDestino}&travelmode=driving"
+    

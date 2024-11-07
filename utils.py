@@ -75,10 +75,12 @@ class Utils:
 
     # Reserva um veículo e o marca como indisponível
     @staticmethod
-    def reservarVeiculo(veiculo, caminho, veiculosTransporte):
+    def reservarVeiculo(veiculo, caminho, veiculosTransporte, cidade, estado):
+    # Cria o campo 'Destino' com o formato desejado
+        veiculo['Destino'] = f"{cidade} - {estado}"  # Formato: cidade - sigla estado
         veiculo['Disponibilidade'] = "Nao"  # Marca o veículo como indisponível
         Utils.salvarDadosVeiculos(caminho, veiculosTransporte)  # Salva as alterações no arquivo JSON
-        print(f"Veículo {veiculo['Modelo']} reservado com sucesso!")        
+        print(f"Veículo {veiculo['Modelo']} reservado com sucesso! Destino: {veiculo['Destino']}")        
 
     # Salva os dados dos veículos no arquivo JSON
     @staticmethod
