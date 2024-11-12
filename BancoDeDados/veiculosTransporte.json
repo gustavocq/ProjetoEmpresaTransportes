@@ -5,14 +5,16 @@
             "Modelo": "Fiat Fiorino",
             "Eixos": 2,
             "Capacidade": 650,
-            "Disponibilidade": "Nao"
+            "Disponibilidade": "Nao",
+            "Destino": "itauna - MINAS GERAIS"
         },
         {
             "Id": 2,
             "Modelo": "Volkswagen Delivery Express",
             "Eixos": 2,
             "Capacidade": 1500,
-            "Disponibilidade": "Nao"
+            "Disponibilidade": "Nao",
+            "Destino": "itauna - MINAS GERAIS"
         },
         {
             "Id": 3,
@@ -42,21 +44,24 @@
             "Modelo": "Mercedes-Benz Atego 2430",
             "Eixos": 4,
             "Capacidade": 18000,
-            "Disponibilidade": "Sim"
+            "Disponibilidade": "Nao",
+            "Destino": "itauna - MINAS GERAIS"
         },
         {
             "Id": 7,
             "Modelo": "Scania P310",
             "Eixos": 4,
             "Capacidade": 20000,
-            "Disponibilidade": "Sim"
+            "Disponibilidade": "Nao",
+            "Destino": "<built-in method upper of str object at 0x0000016C853AA010> - MINAS GERAIS"
         },
         {
             "Id": 8,
             "Modelo": "Volkswagen Constellation 25.420",
             "Eixos": 4,
             "Capacidade": 24000,
-            "Disponibilidade": "Sim"
+            "Disponibilidade": "Nao",
+            "Destino": "itauna - MINAS GERAIS"
         }
     ],
     "Caminhao Pesado": [
@@ -65,7 +70,8 @@
             "Modelo": "Ford Cargo 2842",
             "Eixos": 6,
             "Capacidade": 31000,
-            "Disponibilidade": "Sim"
+            "Disponibilidade": "Nao",
+            "Destino": "<built-in method upper of str object at 0x0000023435E65A70> - MINAS GERAIS"
         },
         {
             "Id": 10,
@@ -88,21 +94,24 @@
             "Modelo": "Scania R450",
             "Eixos": 6,
             "Capacidade": 30000,
-            "Disponibilidade": "Sim"
+            "Disponibilidade": "Nao",
+            "Destino": "<built-in method upper of str object at 0x0000023FEC579B90> - MINAS GERAIS"
         },
         {
             "Id": 13,
             "Modelo": "Mercedes-Benz Actros 2651",
             "Eixos": 6,
             "Capacidade": 33000,
-            "Disponibilidade": "Sim"
+            "Disponibilidade": "Nao",
+            "Destino": "itauna - MINAS GERAIS"
         },
         {
             "Id": 14,
             "Modelo": "MAN TGX 28.440",
             "Eixos": 6,
             "Capacidade": 32000,
-            "Disponibilidade": "Sim"
+            "Disponibilidade": "Nao",
+            "Destino": "<built-in method upper of str object at 0x000001DE3FD0A6D0> - MINAS GERAIS"
         }
     ]
 }
