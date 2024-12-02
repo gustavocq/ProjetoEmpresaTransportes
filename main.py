@@ -1,6 +1,7 @@
 import os
 from utils import Utils
 
+# Caminhos para os arquivos de dados
 caminho_veiculos = os.path.join(os.path.dirname(__file__), 'BancoDeDados', 'veiculosTransporte.json')
 caminho_cidades = os.path.join(os.path.dirname(__file__), 'BancoDeDados', 'cidades.json')
 caminho_siglas = os.path.join(os.path.dirname(__file__), 'BancoDeDados', 'estadosSiglas.json')
@@ -11,6 +12,41 @@ cidades = Utils.carregarCidades(caminho_cidades)
 siglas = Utils.carregarSiglas(caminho_siglas)
 
 
+def escolherCidadeEstado():
+    """Permite ao usuário escolher uma cidade e estado de saída entre as opções fixas."""
+    opcoes = [
+        ("Belém", "PA"),
+        ("Recife", "PE"),
+        ("São Paulo", "SP"),
+        ("Curitiba", "PR")
+    ]
+
+    while True:
+        Utils.limparTela()
+        print("Escolha uma cidade e estado para saída:")
+        for i, (cidade, estado) in enumerate(opcoes, start=1):
+            print(f"{i}. {cidade} - {estado}")
+        print("0. Voltar ao menu anterior")
+        print("9. Sair")
+
+        escolha = input("Digite o número da opção desejada: ")
+
+        if escolha == "0":
+            return None, None  # Voltar ao menu anterior
+        elif escolha == "9":
+            Utils.limparTela()
+            exit()
+
+        try:
+            escolha = int(escolha)
+            if 1 <= escolha <= len(opcoes):
+                return opcoes[escolha - 1]
+            else:
+                print("Opção inválida! Tente novamente.")
+        except ValueError:
+            print("Entrada inválida! Tente novamente.")
+
+
 def menuVenda():
     while True:
         Utils.limparTela()
@@ -18,40 +54,40 @@ def menuVenda():
         print("0. Voltar ao menu principal")
         print("9. Sair")
 
-        estado = input("Informe o estado: ")
-        if estado == "0":
+        estado_destino = input("Informe o estado: ")
+        if estado_destino == "0":
             return  # Voltar ao menu principal
-        elif estado == "9":
+        elif estado_destino == "9":
             Utils.limparTela()
             exit()
 
-        estado_valido = Utils.validarEstado(estado, siglas)
+        estado_valido = Utils.validarEstado(estado_destino, siglas)
         while estado_valido is None:
             print("Estado inválido! Tente novamente.")
-            estado = input("Informe o estado: ")
-            if estado == "0":
+            estado_destino = input("Informe o estado: ")
+            if estado_destino == "0":
                 return
-            elif estado == "9":
+            elif estado_destino == "9":
                 Utils.limparTela()
                 exit()
-            estado_valido = Utils.validarEstado(estado, siglas)
+            estado_valido = Utils.validarEstado(estado_destino, siglas)
 
         while True:
             print("\nInforme o nome da cidade:")
             print("0. Voltar para informar outro estado")
             print("9. Sair")
 
-            cidade_escolhida = input("Digite o nome da cidade: ")
-            if cidade_escolhida == "0":
+            cidade_Destino = input("Digite o nome da cidade: ")
+            if cidade_Destino == "0":
                 break
-            elif cidade_escolhida == "9":
+            elif cidade_Destino == "9":
                 Utils.limparTela()
                 exit()
 
-            cidade_escolhida = Utils.removerAcento(cidade_escolhida)
+            cidade_Destino = Utils.removerAcento(cidade_Destino)
             cidades_do_estado = Utils.listarCidadesPorEstado(estado_valido, cidades)
 
-            if cidade_escolhida.upper() not in cidades_do_estado:
+            if cidade_Destino.upper() not in cidades_do_estado:
                 print("Cidade inválida! Tente novamente.")
             else:
                 while True:
@@ -70,7 +106,7 @@ def menuVenda():
                         peso = int(peso)
                         if peso <= 0:
                             raise ValueError("O peso deve ser um valor positivo.")
-                        menuCategorias(peso, cidade_escolhida, estado_valido)
+                        menuCategorias(peso, cidade_Destino, estado_valido)
                         return
                     except ValueError as e:
                         print(f"Entrada inválida: {e}. Tente novamente.")
@@ -118,7 +154,11 @@ def menuAdministrador():
             Utils.pausaParaContinuar()
 
 
-def menuCategorias(peso, cidade_escolhida, estado):
+def menuCategorias(peso, cidade_Destino, estado_destino):
+    Cidade_Saida, Estado_Saida = escolherCidadeEstado()
+    if Cidade_Saida is None or Estado_Saida is None:
+        return  # Voltar ao menu anterior
+
     while True:
         Utils.limparTela()
         print("\nEscolha a categoria do veículo de transporte:")
@@ -148,9 +188,15 @@ def menuCategorias(peso, cidade_escolhida, estado):
                 try:
                     veiculo_escolhido = int(input("Escolha um veículo para reservar (número): ")) - 1
                     if 0 <= veiculo_escolhido < len(veiculos_disponiveis):
-                        Utils.reservarVeiculo(veiculos_disponiveis[veiculo_escolhido], caminho_veiculos, veiculosTransporte, cidade_escolhida, estado)
+                        Utils.reservarVeiculo(
+                            veiculos_disponiveis[veiculo_escolhido],
+                            caminho_veiculos,
+                            veiculosTransporte,
+                            cidade_Destino,
+                            estado_destino
+                        )
                         print("A melhor rota para o destino da sua mercadoria está disponível no link abaixo, boa viagem!")
-                        print(f"{Utils.montaMelhorRota('Belo Horizonte', 'MG', cidade_escolhida, estado)}")
+                        print(f"{Utils.montaMelhorRota(Cidade_Saida, Estado_Saida, cidade_Destino, estado_destino)}")
                         Utils.pausaParaContinuar()
                         return
                     else:
